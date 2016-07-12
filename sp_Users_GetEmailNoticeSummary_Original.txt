@@ -1,7 +1,7 @@
 USE [custWorkflow]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_Users_GetEmailNoticeSummary]    Script Date: 7/8/2016 3:35:33 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_Users_GetEmailNoticeSummary]    Script Date: 7/8/2016 3:32:43 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -26,7 +26,8 @@ CREATE PROCEDURE [dbo].[sp_Users_GetEmailNoticeSummary]
 	--		AND r.Email_Type = 'S'
 	--		AND u.Active = 1
 		
-	select distinct r.Email_Only, u.* 
+	--select distinct r.Email_Only, u.* 
+	select distinct u.* 
 		from Tasks t
 			inner join Rules r on r.Workflow_Category_ID = t.Workflow_Category_ID AND r.Role_To_ID = t.Current_Role_ID 
 			inner join RolePermissions rp on rp.Workflow_Category_ID = t.Workflow_Category_ID AND rp.Role_ID = t.Current_Role_ID
