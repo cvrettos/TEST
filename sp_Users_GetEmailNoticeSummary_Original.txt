@@ -1,0 +1,61 @@
+USE [custWorkflow]
+GO
+
+/****** Object:  StoredProcedure [dbo].[sp_Users_GetEmailNoticeSummary]    Script Date: 7/8/2016 3:35:33 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_Users_GetEmailNoticeSummary]
+(@Task_ID int)
+	as
+	BEGIN
+
+	SET NOCOUNT ON
+	
+	--SELECT distinct u.*  FROM Tasks t
+	--	INNER JOIN Rules r on r.Workflow_Category_ID = t.Workflow_Category_ID AND r.Role_To_ID = t.Current_Role_ID 
+	--	INNER JOIN RolePermissions rp on rp.Workflow_Category_ID = t.Workflow_Category_ID AND rp.Role_ID = t.Current_Role_ID
+	--	INNER JOIN Users u on u.[User_ID] = rp.[User_ID] 
+	--WHERE
+	--	t.Active_Item_Flag = 0 
+	--		AND t.Task_ID = @Task_ID
+	--		AND t.Owner_ID = 0
+	--		AND r.Email_Type = 'S'
+	--		AND u.Active = 1
+		
+	select distinct r.Email_Only, u.* 
+		from Tasks t
+			inner join Rules r on r.Workflow_Category_ID = t.Workflow_Category_ID AND r.Role_To_ID = t.Current_Role_ID 
+			inner join RolePermissions rp on rp.Workflow_Category_ID = t.Workflow_Category_ID AND rp.Role_ID = t.Current_Role_ID
+			inner join Users u on u.[User_ID] = rp.[User_ID] 
+		
+		WHERE t.Active_Item_Flag = 0 
+			and t.Task_ID = @Task_ID
+			--and t.Owner_ID = 0
+			--and r.Email_Type = 'S'
+			and u.Active = 1
+			and ((u.Email_Address is not null) and (u.Email_Address <> ''))		
+	
+	SET NOCOUNT OFF
+	
+	END
+	
+	-- exec [sp_Users_GetEmailNoticeSummary] 386
+	
+	-- select * from rules where rule_id = 72
+	
+	-- select * from roles 
+	
+	-- select * from rules where workflow_category_id = 6 and role_from_id = 14
+	
+	-- select * from workflowhistory where task_id = 386 order by action_date desc
+	
+	-- select * from tasks where task_id = 386
+	-- select * from users where user_name like 'l%'
+	-- update tasks set active_item_flag = 0 where task_id = 304
+	-- update tasks set owner_id = 0 where task_id = 386
+
+GO
